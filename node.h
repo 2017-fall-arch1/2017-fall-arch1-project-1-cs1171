@@ -22,9 +22,12 @@ void bfree(Node *root);
 Node * insert(Node *root, char *fname, char *lname);
 
 /* Delete all elements from btree */
-void delete(Node *root);
+Node * delete(Node *root, char *fname, char *lname);
 
 /* print btree */
 void print(Node *root);
+
+/* inOrder printing */
+void inOrder(Node *root);
 
 #endif	/* included */
