@@ -1,4 +1,4 @@
-all: bTree
+all: project1
 
 CFLAGS=-g -O3
 
@@ -6,15 +6,14 @@ CFLAGS=-g -O3
 #   $@ is the production's target
 #   $^ are the production's prerequisites
 
-bTree: btree.o btdemo.o
+project1: btree.o main.o
 	cc -o $@ $^
 
-btree.o: btree.c node.h
+btree.o: btree.c btree.h
 	cc -c $(CFLAGS) btree.c
 
-btdemo.o: btdemo.c node.h
-	cc -c $(CLFAGS) btdemo.c
+main.o: main.c btree.h
+	cc -c $(CLFAGS) main.c
 
 clean:
-	rm -f *.o bTree *.*~
-
+	rm -f *.o project1 *.*~

@@ -8,23 +8,23 @@ This directory contains files which will:
    and write employee names to a file.
 
 
-node.h: provides definitions for node creation, deletion,
+btree.h: provides definitions for node creation, deletion,
 freeing all nodes, and printing all nodes. It also has
 a definition for the Node struct. I used llist.h as a template
 for my node.h file.
 
 btree.c: has the actual code for the definitions created
-in node.h.
+in btree.h.
 
-btdemo.c: cotains the code for a user interface which allows
+main.c: cotains the code for a user interface which allows
 the addition and deletion of employee names to a btree. Also
 can read/write names to a text file.
 
-Makefile: 'make' will compile all files into 'bTree'.
-Running bTree will start the program. The user interface
-will list options: 1. to add an employee, 2. to delete an
-employee, 3. to print tree, 4. to load names from file,
-5. to write names to file, 6. to exit program.
+Makefile: 'make' will compile all files into 'project1'.
+Running project1 will start the program. The user interface
+will list options: 1: to add an employee, 2: to delete an
+employee, 3: to print tree, 4: to load names from file,
+5: to write names to file, 0: to exit program.
 
 'make clean' will delete everything created by 'make'
-(.o files and bTree).
+(.o files and project1).

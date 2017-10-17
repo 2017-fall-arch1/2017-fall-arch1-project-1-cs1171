@@ -1,164 +1,113 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "node.h"
+#include "btree.h"
 
-Node *NAlloc()
+char * filename = "pms.txt";
+
+// add employee to file
+void addToFile(char * first_name, char * last_name)
 {
-  Node *node = (Node *)malloc(sizeof(Node));
-  node->left = node->right = NULL;
-  return node;
+  FILE * file = fopen(filename, "a");
+
+  // catch any file errors
+  if(!file)
+    {
+      printf("%s\n", strerror(errno));
+      exit(1);
+    }
+  printf("Adding employee to file...\n\n");
+  fprintf(file, "%s", first_name);
+  fprintf(file, "%s", last_name);
+  fclose(file);
 }
 
-void bfree(Node *root)
+// test all functions
+int test_everything()
 {
-  bfree(root->left);
-  free(root);
-  bfree(root->right);
+  Node * tree = NULL;
+  tree = populate_tree(tree);
+  printTree(tree);
+  freeTree(tree);
 }
 
-Node* delete(Node *root, char *fname, char *lname)
+// read from file and pass to tree creator
+Node * populate_tree(Node * tree)
 {
-  if(root == NULL)
+  FILE *file = fopen(filename, "rt");
+  Node * current = NULL;
+  
+  // catch any file errors
+  if(!file)
     {
-      printf("Tree is empty.");
-      return NULL;
+      printf("Error opening file\n%s\n", strerror(errno));
+      exit(1);
+    }
+  current = pmalloc;
+  // reading names
+  while(fscanf(file, "%20s", current->fname) > 0)
+    {
+      fscanf(file, "%20s", current->lname);
+      // testing fscanf
+      // printf("%s %s\n", current->first_name, current->last_name);
+      tree = insert(tree, current->fname, current->lname);
     }
 
-  Node *current;
-
-  // traverse left
-  if(strcmp(lname, root->lname) < 0)
-    {
-      root->left = delete(root->left, fname, lname);
-    }
-  // traverse right
-  else if(strcmp(lname, root->lname) > 0)
-    {
-      root->right = delete(root->right, fname, lname);
-    }
-  // found lname, check fname
-  else if(strcmp(lname,root->lname) == 0)
-    {
-      // traverse left
-      if(strcmp(fname,root->fname) < 0)
-	{
-	  root->left = delete(root->left, fname, lname);
-	}
-      // traverse right
-      else if(strcmp(fname,root->fname) > 0)
-	{
-	  root->right = delete(root->right, fname, lname);
-	}
-      // found node
-      else if(strcmp(lname,root->lname) == 0 && strcmp(fname,root->fname) == 0)
-	{
-	  if(root->left == NULL)
-	    {
-	      current = root->right;
-	      free(root);
-	      root = current;
-	    }
-	  else if(root->right == NULL)
-	    {
-	      current = root->left;
-	      free(root);
-	      root = current;
-	    }
-
-	  /* if there are both left and right nodes */
-	  else
-	    {
-	      current = root->right;
-	      Node *temp;
-	      
-	      while(current->left != NULL)
-		{
-		  temp = current; // temporary holder for parent node
-		  current = current->left; // node to swim up
-		}
-
-	      /* leaf swims up */
-	      root->fname = current->fname;
-	      root->lname = current->lname;
-
-	      /* left node being deleted  */
-	      if(temp != NULL)
-		{
-		  temp->left = delete(temp->left, temp->left->fname, temp->left->lname);
-		}
-	      /* right node being deleted */
-	      else
-		{
-		  root->right = delete(root->right, root->right->fname, root->right->lname);
-		}
-	    }
-	}
-      else
-	{
-	  printf("Employee not found.\n");
-	}
-    }
-  return root;
+  fclose(file);
+  
+  return tree;
 }
 
-Node* insert(Node *root, char *fname, char *lname)
+// add nodes to binary tree
+Node * insert(Node * tree, char * fname, char * lname)
 {
-  if(root == NULL)
+  if(tree == NULL)
     {
-      Node * temp = NAlloc();
+      Node * temp;
+      temp = pmalloc;
       temp->fname = fname;
       temp->lname = lname;
-      root = temp;
+      return temp;
     }
-  else
+  // left/right branch control
+  // checks last name. if less adds to left, if greater
+  // adds to right branch.
+  if(strcmp(lname, tree->lname) < 0)
     {
-      Node * current = root;
-
-      while(current != NULL)
-	{
-	  if(strcmp(lname,current->lname) < 0)
-	    {
-	      current->left = insert(current->left, fname, lname);
-	    }
-	  else if(strcmp(lname,current->lname) > 0)
-	    {
-	      current->right = insert(current->right, fname, lname);
-	    }
-	  else if(strcmp(lname,current->lname) == 0)
-	    {
-	      if(strcmp(fname,current->fname) < 0)
-		{
-		  current->left = insert(current->left, fname, lname);
-		}
-	      else if(strcmp(fname, current->fname) > 0)
-		{
-		  current->right = insert(current->right, fname, lname);
-		}
-	    }
-	}
+      printf("GOING LEFT\n");
+      tree->left = insert(tree->left, fname, lname);
     }
-  
-  return root;
+  else if(strcmp(lname, tree->lname) > 0)
+    {
+      printf("GOING RIGHT\n");
+      tree->right = insert(tree->right, fname, lname);
+    }
+  return tree;
 }
 
-// will print in-order
-void print(Node *root)
+// will print tree in-order
+void printTree(Node * tree)
 {
-  if(root == NULL)
+  if(tree == NULL)
     {
-      printf("Tree is empty!\n");
       return;
     }
-  else
-    {
-      inOrder(root);
-    }
+  printTree(tree->left);
+  printf("%s %s", tree->fname, tree->lname);
+  printTree(tree->right);
 }
 
- void inOrder(Node *root)
- {
-   inOrder(root->left);
-   printf("Employee: %s, %s", root->lname, root->fname);
-   inOrder(root->right);
- }
+// frees nodes from memory
+void freeTree(Node * tree)
+{
+  if(tree == NULL)
+    {
+      return;
+    }
+  freeTree(tree->left);
+  free(tree);
+  freeTree(tree->right);
+}
+
+// remove employee from tree
+Node * removeEmployee(Node * tree, char * fname, char * lname)
+{
+  
+}
