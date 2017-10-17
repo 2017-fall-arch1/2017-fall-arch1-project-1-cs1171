@@ -5,7 +5,7 @@ int main()
   char sentinel = '6';
   char * name1 = (char *) malloc(sizeof(21));
   char * name2 = (char *) malloc(sizeof(21));
-  Node * tree = NULL;
+  // Node * tree = NULL;
   
   do
     {
@@ -30,31 +30,19 @@ int main()
 	case '1':
 	  getchar();
 	  printf("Please enter employee first name:\n");
-	  if(fgets(name1, 21, stdin))
-	    {
-	      sscanf(name1, "%s", name1);
-	    }
+	  fgets(name1, 21, stdin);
 	  printf("Please enter employee last name:\n");
-	  if(fgets(name2, 21, stdin))
-	    {
-	      sscanf(name2, "%s", name2);
-	    }
+	  fgets(name2, 21, stdin);
 	  tree = insert(tree, name1, name2);
 	  break;
 
 	case '2':
 	  printf("Please enter employee first name:\n");
 	  getchar();
-	  if(fgets(name1, 21, stdin))
-	    {
-	      sscanf(name1, "%s", name1);
-	    }
+	  fgets(name1, 21, stdin);
 	  printf("Please enter employee last name:\n");
-	  if(fgets(name2, 21, stdin))
-	    {
-	      sscanf(name2, "%s", name2);
-	    }
-
+	  fgets(name2, 21, stdin);
+	  tree = delete(tree, name1, name2);
 	  printf("Deleting employee...\n");
 	  
 	  break;
