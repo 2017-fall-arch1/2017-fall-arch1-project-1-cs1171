@@ -16,6 +16,7 @@ int main()
       printf("3: List all employees\n");
       printf("4: Read employees from file\n");
       printf("5: Write employees to file\n");
+      printf("6: Delete all employees\n");
       printf("0: Exit program\n");
       
       sentinel = getchar();
@@ -34,17 +35,17 @@ int main()
 	  printf("Please enter employee last name:\n");
 	  fgets(name2, 21, stdin);
 	  tree = insert(tree, name1, name2);
+	  printf("Inserting employee...\n");
 	  break;
 
 	case '2':
-	  printf("Please enter employee first name:\n");
 	  getchar();
+	  printf("Please enter employee first name:\n");
 	  fgets(name1, 21, stdin);
 	  printf("Please enter employee last name:\n");
 	  fgets(name2, 21, stdin);
 	  tree = delete(tree, name1, name2);
 	  printf("Deleting employee...\n");
-	  
 	  break;
 
 	case '3':
@@ -54,10 +55,24 @@ int main()
 	  break;
 
 	case '4':
+	  getchar();
 	  tree = populate_tree(tree);
+	  printf("Populating tree from pms.txt...\n");
 	  break;
 
 	case '5':
+	  getchar();
+	  char * file;
+	  printf("Please enter name of file to write:\n");
+	  fgets(file, 10, stdin);
+	  writeTree(tree, file);
+	  printf("Writing employees to file...\n");
+	  break;
+
+	case '6':
+	  getchar();
+	  freeTree(tree);
+	  printf("Deleting tree...\n");
 	  break;
 
 	default:

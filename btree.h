@@ -17,11 +17,13 @@ typedef struct Node
 
 #define pmalloc (Node *) malloc(sizeof(Node));
 Node * populate_tree(Node * tree);
-void addToFile(char * fname, char * lname);
+void writeTree(Node * tree, char * filename);
+void wHelper(Node * tree, FILE * file);
 Node * delete(Node * tree, char * fname, char * lname);
 Node * insert(Node * tree, char * fname, char * lname);
 void printTree(Node * tree);
 void freeTree(Node * tree);
+
 extern Node * tree;
 
 #endif

@@ -24,7 +24,8 @@ Makefile: 'make' will compile all files into 'project1'.
 Running project1 will start the program. The user interface
 will list options: 1: to add an employee, 2: to delete an
 employee, 3: to print tree, 4: to load names from file,
-5: to write names to file, 0: to exit program.
+5: to write names to file, 6: to erase all names from the
+tree, 0: to exit program.
 
 'make clean' will delete everything created by 'make'
 (.o files and project1).

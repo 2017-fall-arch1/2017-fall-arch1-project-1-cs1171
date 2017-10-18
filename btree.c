@@ -3,32 +3,6 @@
 char * filename = "pms.txt";
 Node * tree = NULL;
 
-// add employee to file
-void addToFile(char * first_name, char * last_name)
-{
-  FILE * file = fopen(filename, "a");
-
-  // catch any file errors
-  if(!file)
-    {
-      printf("%s\n", strerror(errno));
-      exit(1);
-    }
-  printf("Adding employee to file...\n\n");
-  fprintf(file, "%s", first_name);
-  fprintf(file, "%s", last_name);
-  fclose(file);
-}
-
-// test all functions
-int test_everything()
-{
-  Node * tree = NULL;
-  tree = populate_tree(tree);
-  printTree(tree);
-  freeTree(tree);
-}
-
 // read from file and pass to tree creator
 Node * populate_tree(Node * tree)
 {
@@ -55,6 +29,38 @@ Node * populate_tree(Node * tree)
   
   return tree;
 }
+
+void writeTree(Node * tree, char * filen)
+{
+  FILE *file = fopen(filen, "a");
+  if(tree == NULL)
+    {
+      return;
+    }
+  if(!file)
+    {
+      printf("Error opening file %s\n", strerror(errno));
+      exit(1);
+    }
+  else
+    {
+      wHelper(tree, file);
+      
+      fclose(file);
+    }
+}
+
+void wHelper(Node * tree, FILE * file)
+{
+  if(tree != NULL)
+    {
+      wHelper(tree->left, file);
+      fprintf(file, "%s\n\r", tree->fname);
+      fprintf(file, "%s\n\r", tree->lname);
+      wHelper(tree->right,file);
+    }
+}
+
 
 // add nodes to binary tree
 Node * insert(Node * tree, char * fname, char * lname)
@@ -83,16 +89,14 @@ Node * insert(Node * tree, char * fname, char * lname)
 
 // will print tree in-order
 void printTree(Node * tree)
-{
-  int len;
-  
+{  
   if(tree == NULL)
     {
       return;
     }
   
   printTree(tree->left);
-  printf("Employee: %s%s", tree->fname, tree->lname);
+  printf("Employee: %s %s ", tree->fname, tree->lname);
   printTree(tree->right);
 }
 
